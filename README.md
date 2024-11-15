@@ -99,8 +99,8 @@ telescope.setup({
 				-- see Pointer Symbols below. Default is as below ("antonyms", "similat to" and
 				-- "also see").
 				pointer_symbols = { "!", "&", "^" },
-				-- Number of characters required before results are returned (to avoid returning
-				-- the whole dictionary these is a lower limit of 2. Default is three.
+				-- Number of characters required before results are returned To avoid returning
+				-- the whole dictionary there is a lower limit of 2. Default is three.
 				char_search_threshold = 3,
 				-- Choose the layout strategy.
 				layout_strategy = "horizontal",
