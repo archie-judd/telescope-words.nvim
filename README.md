@@ -82,8 +82,9 @@ telescope.setup({
 	defaults = {
 		-- ...
 		extensions = {
+                        -- This configuration only affects this extension.
 			telescope_words = {
-				--- Define custom mappings. These only affect this extension.
+				-- Define custom mappings.
 				mappings = {
 					-- Normal mode.
 					n = {
@@ -100,9 +101,9 @@ telescope.setup({
 				-- Number of characters required before results are returned (to avoid returning
 				-- the whole dictionary these is a lower limit of 2.
 				char_search_threshold = 3,
-				-- Choose the layout strategy - default is your global configuration.
+				-- Choose the layout strategy.
 				layout_strategy = "horizontal",
-				-- And your layout config - default is your global configuration,
+				-- And your layout config.
 				layout_config = { height = 0.75, width = 0.75, preview_width = 0.65 },
 			},
 		},
