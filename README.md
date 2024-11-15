@@ -84,7 +84,7 @@ telescope.setup({
 		extensions = {
                         -- This configuration only affects this extension.
 			telescope_words = {
-				-- Define custom mappings.
+				-- Define custom mappings. Default mappings are {} (empty).
 				mappings = {
 					-- Normal mode.
 					n = {
@@ -95,11 +95,12 @@ telescope.setup({
 						["<CR>"] = word_actions.replace_word_under_cursor,
 					},
 				},
-				-- Default pointers are 'antonyms' (!), 'similar to' (&) and 'also see' (^) -
-				-- see Pointer Symbols below.
+				-- Default pointers define the lexical relations listed under each definition,
+				-- see Pointer Symbols below. Default is as below ("antonyms", "similat to" and
+				-- "also see").
 				pointer_symbols = { "!", "&", "^" },
 				-- Number of characters required before results are returned (to avoid returning
-				-- the whole dictionary these is a lower limit of 2.
+				-- the whole dictionary these is a lower limit of 2. Default is three.
 				char_search_threshold = 3,
 				-- Choose the layout strategy.
 				layout_strategy = "horizontal",
