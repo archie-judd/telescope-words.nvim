@@ -6,7 +6,7 @@ Fuzzy find words and synonyms using Telescope.
 
 `telescope-words.nvim` is an extension for `telescope.nvim` that enables fast offline fuzzy-finding of words, and synonyms.
 
-It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definition and lexical relations.
+It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
 [video](https://github.com/user-attachments/assets/eedcfd7f-c8bc-471a-834a-456d6ef995cc)
 
