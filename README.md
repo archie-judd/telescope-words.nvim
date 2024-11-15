@@ -96,7 +96,7 @@ telescope.setup({
 					},
 				},
 				-- Default pointers define the lexical relations listed under each definition,
-				-- see Pointer Symbols below. Default is as below ("antonyms", "similat to" and
+				-- see Pointer Symbols below. Default is as below ("antonyms", "similar to" and
 				-- "also see").
 				pointer_symbols = { "!", "&", "^" },
 				-- Number of characters required before results are returned To avoid returning
