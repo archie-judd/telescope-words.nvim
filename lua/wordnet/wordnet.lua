@@ -37,10 +37,10 @@ local function get_full_synset_for_synset(synset)
 end
 
 ---Get all full synsets for a given word
----@param word string
+---@param search_word string
 ---@return FullSynset[]
-local function get_full_synsets_for_word(word)
-	local entries = read.get_sense_index_entries_for_word(word)
+local function get_full_synsets_for_word(search_word)
+	local entries = read.get_sense_index_entries_for_word(search_word)
 	local full_synsets = {}
 	for _, entry in ipairs(entries) do
 		local data_filepath = read.get_data_filepath_for_synset_type(entry.ss_type)
@@ -54,30 +54,23 @@ end
 ---Find all words in a synset that are similar to the search word. Returns exact synonyms, all "similar to" words, all
 ---of their exact synonyms, and all of their "similar to" words too. This could be recursive with a user-defined depth.
 ---@param full_synset FullSynset
----@param search_word string
 ---@return string[]
-local function get_similar_words_for_synset(full_synset, search_word)
+local function get_similar_words_for_synset(full_synset)
 	local similar_words = {}
 	for _, word in ipairs(full_synset.words) do
-		if word.word ~= search_word then
-			table.insert(similar_words, word.word)
-		end
+		table.insert(similar_words, word.word)
 	end
 	for _, full_ptr in ipairs(full_synset.full_pts) do
 		if full_ptr.pointer_symbol == "&" or full_ptr.pointer_symbol == "^" then
 			for _, word in ipairs(full_ptr.synset.words) do
-				if word.word ~= search_word then
-					table.insert(similar_words, word.word)
-				end
+				table.insert(similar_words, word.word)
 			end
 			if full_ptr.pointer_symbol == "&" then
 				local full_ptr_synset = get_full_synset_for_synset(full_ptr.synset)
 				for _, ptr_ptr in ipairs(full_ptr_synset.full_pts) do
 					if ptr_ptr.pointer_symbol == "&" then
 						for _, word in ipairs(ptr_ptr.synset.words) do
-							if word.word ~= search_word then
-								table.insert(similar_words, word.word)
-							end
+							table.insert(similar_words, word.word)
 						end
 					end
 				end
@@ -115,10 +108,11 @@ function M.get_similar_words_for_word(search_word)
 	local full_synsets = get_full_synsets_for_word(search_word)
 	local similar_words_raw = {}
 	for _, full_synset in ipairs(full_synsets) do
-		local _similar_words_raw = get_similar_words_for_synset(full_synset, search_word)
+		local _similar_words_raw = get_similar_words_for_synset(full_synset)
 		similar_words_raw = utils.join_arrays(similar_words_raw, _similar_words_raw)
 	end
 	similar_words_raw = utils.remove_duplicates(similar_words_raw)
+	similar_words_raw = utils.move_to_start_of_array(similar_words_raw, search_word)
 	for i, similar_word_raw in ipairs(similar_words_raw) do
 		similar_words[i] = utils.prettify_word(similar_word_raw)
 	end

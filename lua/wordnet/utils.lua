@@ -8,10 +8,9 @@ function M.get_root_dir()
 	return vim.fn.fnamemodify(script_path, ":p:h:h:h")
 end
 
----@generic T : any
----@param t1 T[]
----@param t2 T[]
----@return T[]
+---@param t1 any[]
+---@param t2 any[]
+---@return any[]
 function M.join_arrays(t1, t2)
 	local result = {}
 	for i = 1, #t1 do
@@ -31,8 +30,7 @@ function M.prettify_word(word_raw)
 end
 
 ---Check if a given value is in a table (which is an array)
----@generic T : any
----@param array T[]
+---@param array any[]
 ---@param value any
 ---@return boolean
 function M.array_contains(array, value)
@@ -44,9 +42,8 @@ function M.array_contains(array, value)
 	return false
 end
 
----@generic T : any
----@param array T[]
----@return T[]
+---@param array any[]
+---@return any[]
 function M.remove_duplicates(array)
 	local unique = {}
 	for _, item in ipairs(array) do
@@ -57,9 +54,29 @@ function M.remove_duplicates(array)
 	return unique
 end
 
+---Search for a value in an array. If present move to the start.
+---@param array any[]
+---@param value any
+---@return any[]
+function M.move_to_start_of_array(array, value)
+	-- Find the index of the value in the array
+	local index = nil
+	for i, v in ipairs(array) do
+		if v == value then
+			index = i
+			break
+		end
+	end
+	if index then
+		table.remove(array, index)
+		table.insert(array, 1, value)
+	end
+
+	return array
+end
+
 ---Sort sense index entries by sense integer (increasing), and tag count (decreasing). Sense number has priority.
 ---@param entries SenseIndexEntry
----@return SenseIndexEntry
 function M.sort_sense_index_entries(entries)
 	table.sort(entries, function(entry1, entry2)
 		if entry1.sense_number == entry2.sense_number then
