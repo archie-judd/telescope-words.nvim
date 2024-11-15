@@ -78,9 +78,6 @@ You can customise the extension in telescope's setup function:
 local telescope = require("telescope")
 local word_actions = require("telescope_words.actions")
 
-local telescope = require("telescope")
-local word_actions = require("telescope_words.actions")
-
 telescope.setup({
 	defaults = {
 		-- ...
