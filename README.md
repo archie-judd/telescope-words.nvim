@@ -8,7 +8,7 @@ Fuzzy find words and synonyms using Telescope.
 
 It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
-[video](https://github.com/user-attachments/assets/eedcfd7f-c8bc-471a-834a-456d6ef995cc)
+[video](https://github.com/user-attachments/assets/4a837628-ea37-4cc9-a8bf-d2401b1c9c54)
 
 ## Getting Started
 
