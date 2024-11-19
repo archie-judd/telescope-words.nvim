@@ -5,7 +5,7 @@ local M = {}
 function M.get_root_dir()
 	local info = debug.getinfo(1, "S")
 	local script_path = info.source:sub(2)
-	return vim.fn.fnamemodify(script_path, ":p:h:h:h")
+	return vim.fn.fnamemodify(script_path, ":p:h:h:h:h")
 end
 
 ---@param t1 any[]

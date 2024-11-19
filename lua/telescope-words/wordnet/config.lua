@@ -1,4 +1,4 @@
-local utils = require("wordnet.utils")
+local utils = require("telescope-words.wordnet.utils")
 
 local M = {}
 

@@ -1,6 +1,6 @@
-local config = require("wordnet.config")
-local parse = require("wordnet.parse")
-local utils = require("wordnet.utils")
+local config = require("telescope-words.wordnet.config")
+local parse = require("telescope-words.wordnet.parse")
+local utils = require("telescope-words.wordnet.utils")
 
 local M = {}
 

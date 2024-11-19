@@ -1,4 +1,4 @@
-local types = require("wordnet.types")
+local types = require("telescope-words.wordnet.types")
 local M = {}
 
 ---Parse parse the lex_id parts of a given synset entry

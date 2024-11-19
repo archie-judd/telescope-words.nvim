@@ -5,9 +5,56 @@ local pickers = require("telescope.pickers")
 local previewer_utils = require("telescope.previewers.utils")
 local previewers = require("telescope.previewers")
 local telescope_word_config = require("telescope-words.config")
-local wordnet = require("wordnet.wordnet")
+local wordnet = require("telescope-words.wordnet")
 
 local M = {}
+
+---Get the definition for a word, catching and logging any errors
+---@param word string
+---@param pointer_symbols string[]
+---@return string
+local function get_definition_safe(word, pointer_symbols)
+	local success, results_or_error = pcall(wordnet.get_definition_for_word, word, pointer_symbols)
+	if success then
+		return results_or_error
+	else
+		vim.notify("Error: " .. results_or_error, vim.log.levels.ERROR)
+		return ""
+	end
+end
+
+---Get the dictionary entries for a term, catching and logging any errors
+---@param search_term string
+---@param char_search_threshold integer
+---@return string[]
+local function search_dictionary_safe(search_term, char_search_threshold)
+	if #search_term < math.max(char_search_threshold, 2) then
+		return {}
+	end
+	local success, results_or_error = pcall(wordnet.get_index_word_matches, search_term)
+	if success then
+		return results_or_error
+	else
+		vim.notify("Error: " .. results_or_error, vim.log.levels.ERROR)
+		return {}
+	end
+end
+
+---Get the thesaurus entries for a word, catching and logging any errors
+---@param search_word string
+---@return string[]
+local function search_thesaurus_safe(search_word)
+	if search_word == "" then
+		return {}
+	end
+	local success, results_or_error = pcall(wordnet.get_similar_words_for_word, search_word)
+	if success then
+		return results_or_error
+	else
+		vim.notify("Error: " .. results_or_error, vim.log.levels.ERROR)
+		return {}
+	end
+end
 
 ---Merge the provided opts table with the config table
 ---@param opts table
@@ -51,7 +98,7 @@ end
 ---@param status table
 ---@param opts table
 local function define_preview(self, entry, status, opts)
-	local definition = wordnet.get_definition_for_word(entry[1], opts.pointer_symbols)
+	local definition = get_definition_safe(entry[1], opts.pointer_symbols)
 	local line_table = vim.split(definition, "\n", { trimempty = false })
 	vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, line_table)
 	vim.api.nvim_win_set_option(status.preview_win, "wrap", true)
@@ -61,7 +108,7 @@ local function define_preview(self, entry, status, opts)
 	previewer_utils.highlighter(self.state.bufnr, "markdown")
 end
 
----Search for wordnet matches using telescope
+---Search for telescope-words.wordnet.matches using telescope
 ---@param opts table
 M.search_dictionary = function(opts)
 	opts = opts or {}
@@ -72,8 +119,8 @@ M.search_dictionary = function(opts)
 			prompt_title = "Dictionary",
 			results_title = "Words",
 			finder = finders.new_dynamic({
-				fn = function(str)
-					return wordnet.get_index_word_matches(str, opts.char_search_threshold)
+				fn = function(search_term)
+					return search_dictionary_safe(search_term, opts.char_search_threshold)
 				end,
 			}),
 			previewer = previewers.new_buffer_previewer({
@@ -103,9 +150,7 @@ M.search_thesaurus = function(opts)
 			prompt_title = "Thesaurus",
 			results_title = "Similar words",
 			finder = finders.new_dynamic({
-				fn = function(word)
-					return wordnet.get_similar_words_for_word(word)
-				end,
+				fn = search_thesaurus_safe,
 			}),
 			previewer = previewers.new_buffer_previewer({
 				title = "WordNet Definition",
@@ -135,7 +180,7 @@ M.search_dictionary_for_word_under_cursor = function(opts)
 			results_title = "Words",
 			finder = finders.new_dynamic({
 				fn = function(search_term)
-					return wordnet.get_index_word_matches(search_term, opts.char_search_threshold)
+					return search_dictionary_safe(search_term, opts.char_search_threshold)
 				end,
 			}),
 			previewer = previewers.new_buffer_previewer({
@@ -166,7 +211,7 @@ M.search_thesaurus_for_word_under_cursor = function(opts)
 			prompt_title = "Thesaurus",
 			results_title = "Similar words",
 			finder = finders.new_dynamic({
-				fn = wordnet.get_similar_words_for_word,
+				fn = search_thesaurus_safe,
 			}),
 			previewer = previewers.new_buffer_previewer({
 				title = "WordNet Definition",
