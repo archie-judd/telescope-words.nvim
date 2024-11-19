@@ -26,7 +26,7 @@ end
 ---@param word_raw string
 ---@return string
 function M.prettify_word(word_raw)
-	return word_raw:gsub("%(.%)", ""):gsub("_", " ")
+	return word_raw:gsub("%b()", ""):gsub("_", " ")
 end
 
 ---Check if a given value is in a table (which is an array)
