@@ -1,4 +1,4 @@
-local utils = require("wordnet.utils")
+local utils = require("telescope-words.wordnet.utils")
 
 local M = {}
 
@@ -76,7 +76,7 @@ local function get_pointer_string(full_synset, pointer_symbols)
 		if utils.array_contains(pointer_symbols, pointer_symbol) then
 			local pointer_type_str = POINTER_SYMBOL_TO_DESC[pointer_symbol]:lower()
 			local word_str = table.concat(words, ", ")
-			pts_str = pts_str .. "`" .. pointer_type_str .. "`" .. ": " .. word_str .. "\n"
+			pts_str = string.format("%s`%s`: %s\n", pts_str, pointer_type_str, word_str)
 		end
 	end
 	pts_str = pts_str .. "\n\n"
@@ -100,16 +100,8 @@ function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols
 		local word_str = table.concat(words, ", ")
 		local pts_string = get_pointer_string(full_synset, pointer_symbols)
 
-		definition = definition
-			.. i
-			.. ". "
-			.. "[["
-			.. syntactic_category
-			.. "]] "
-			.. word_str
-			.. ":\n\n"
-			.. full_synset.gloss
-			.. "\n\n"
+		definition =
+			string.format("%s%s.[[%s]] %s:\n\n%s\n\n", definition, i, syntactic_category, word_str, full_synset.gloss)
 
 		if pts_string ~= "" then
 			definition = definition .. pts_string

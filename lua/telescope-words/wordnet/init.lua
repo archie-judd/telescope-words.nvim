@@ -1,7 +1,7 @@
-local format = require("wordnet.format")
-local read = require("wordnet.read")
-local types = require("wordnet.types")
-local utils = require("wordnet.utils")
+local format = require("telescope-words.wordnet.format")
+local read = require("telescope-words.wordnet.read")
+local types = require("telescope-words.wordnet.types")
+local utils = require("telescope-words.wordnet.utils")
 
 local M = {}
 
@@ -82,15 +82,11 @@ end
 
 ---Return all the words in the index that starat with the search term
 ---@param search_term string
----@param char_threshold integer
 ---@return string[]
-function M.get_index_word_matches(search_term, char_threshold)
+function M.get_index_word_matches(search_term)
 	local matches = {}
 	search_term = search_term:lower():gsub(" ", "_")
 	-- do not search for strings with fewer chars than char_threshold
-	if #search_term < math.max(char_threshold, 2) then
-		return {}
-	end
 	local matches_raw = read.get_words_beginning_with_string_in_index(search_term)
 	matches_raw = utils.remove_duplicates(matches_raw)
 	for i, match_raw in ipairs(matches_raw) do
