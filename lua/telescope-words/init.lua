@@ -104,7 +104,6 @@ local function define_preview(self, entry, status, opts)
 	vim.api.nvim_win_set_option(status.preview_win, "wrap", true)
 	vim.api.nvim_win_set_option(status.preview_win, "conceallevel", 2)
 	vim.api.nvim_win_set_option(status.preview_win, "number", false)
-	vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "markdown")
 	previewer_utils.highlighter(self.state.bufnr, "markdown")
 end
 
