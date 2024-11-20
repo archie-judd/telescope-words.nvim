@@ -51,7 +51,7 @@ local function build_pointer_string_table(full_pts, pointer_symbols)
 		if utils.array_contains(pointer_symbols, full_ptr.pointer_symbol) then
 			local words_pretty = {}
 			for _, word in ipairs(full_ptr.synset.words) do
-				local word_pretty = utils.prettify_word(word.word)
+				local word_pretty = utils.format_word_for_display(word.word)
 				table.insert(words_pretty, word_pretty)
 			end
 
@@ -89,7 +89,7 @@ end
 ---@param lemma string
 function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols, lemma)
 	local definition = ""
-	local lemma_str = utils.prettify_word(lemma)
+	local lemma_str = utils.format_word_for_display(lemma)
 	for i, full_synset in ipairs(full_synsets) do
 		local words = {}
 		for _, word in ipairs(full_synset.words) do

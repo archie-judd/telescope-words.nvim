@@ -1,4 +1,3 @@
-local fzy = require("fzy")
 local config = require("telescope-words.wordnet.config")
 local parse = require("telescope-words.wordnet.parse")
 local utils = require("telescope-words.wordnet.utils")
@@ -7,7 +6,7 @@ local M = {}
 
 ---Get the index entries for a given search term, returning the lines where `match_function(line, search_term)` is true.
 ---Uses binary search to minimise the integer of lines read.
----@param match_function fun(line: string, search_term: string): boolean
+---@param match_function MatchFunction
 ---@param search_term string
 ---@return string[]
 local function get_index_entries_by_match_function(match_function, search_term)
@@ -29,8 +28,8 @@ local function get_index_entries_by_match_function(match_function, search_term)
 		local mid = math.floor((low + high) / 2)
 		file:seek("set", mid)
 		local _ = file:read("*l") -- Skip partial line
-		local line = file:read("*l") -- Read the actual line
-		if line and line >= search_term then
+		local entry = file:read("*l") -- Read the actual line
+		if entry and entry >= search_term then
 			high = mid
 		else
 			low = mid + 1
@@ -51,10 +50,10 @@ local function get_index_entries_by_match_function(match_function, search_term)
 			-- If we've reached a newline or the beginning of the file
 			-- This means we've reached the start of a new line
 			file:seek("set", pos == 0 and 0 or pos + 1) -- Adjust the pointer to the start of the line
-			local line = file:read("*l") -- Read the full line starting from this position
-			if line and match_function(line, search_term) then
+			local entry = file:read("*l") -- Read the full line starting from this position
+			if entry and match_function(entry, search_term) then
 				-- Check if the line matches the prefix
-				first_match = file:seek("cur") - #line - 1 -- Mark the position of the first match
+				first_match = file:seek("cur") - #entry - 1 -- Mark the position of the first match
 			else
 				-- Stop scanning if we find a non-matching line
 				break
@@ -64,44 +63,38 @@ local function get_index_entries_by_match_function(match_function, search_term)
 
 	-- Forward scan to find all matching lines
 	first_match = first_match or start_pos
-	local chunk = {}
+	local matched = {}
 	file:seek("set", first_match)
 
 	repeat
-		local line = file:read("*l")
-		if line and match_function(line, search_term) then
-			table.insert(chunk, line)
+		local entry = file:read("*l")
+		if entry and match_function(entry, search_term) then
+			table.insert(matched, entry)
 		else
 			break
 		end
 
-	until not line
+	until not entry
 
 	file:close()
-	return chunk
+	return matched
 end
 
 ---Return true if the word in the entry matches the search term exactly
----@param line string
+---@param entry_raw string
 ---@param search_term string
 ---@return boolean
-local function entry_word_matches_exactly(line, search_term)
-	return line:match("^(.-)%%") == search_term
+local function word_matches_exactly(entry_raw, search_term)
+	return entry_raw:match("^(.-)%%") == search_term
 end
 
----comment
+---Returns a match function that checks if the first n letters of the line match the search term
 ---@param n integer
----@return fun(line: string, search_term: string): boolean
+---@return MatchFunction
 local function get_first_n_letters_match(n)
-	return function(line, search_term)
-		return string.sub(line, 1, n) == string.sub(search_term, 1, n)
+	return function(entry_raw, search_term)
+		return string.sub(entry_raw, 1, n) == string.sub(search_term, 1, n)
 	end
-end
-
----Return true if the word in the entry starts with the search term
-local function entry_starts_with_term(line, search_term)
-	local match_str = search_term:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1") -- escape special characters and replace spaces with underscores
-	return line:match("^" .. match_str)
 end
 
 ----Get the data file path for a given word syntactic category (pos)
@@ -163,34 +156,28 @@ end
 ---For a given word, read all index entries from all index files
 ---@param search_term string
 ---@return SenseIndexEntry[]
-function M.get_sense_index_entries_for_word(search_term)
+function M.get_exact_index_matches_for_word(search_term)
 	local entries = {}
-	local lines = get_index_entries_by_match_function(entry_word_matches_exactly, search_term)
-	for _, line in ipairs(lines) do
-		local index_entry = parse.parse_sense_index_entry(line)
+	local raw_entries = get_index_entries_by_match_function(word_matches_exactly, search_term)
+	for _, raw_entry in ipairs(raw_entries) do
+		local index_entry = parse.parse_sense_index_entry(raw_entry)
 		if index_entry then
 			table.insert(entries, index_entry)
 		end
 	end
-	utils.sort_sense_index_entries(entries)
 	return entries
 end
 
----comment
+---Return the index entries for a given search term, where the search term is a substring of the word in the entry
 ---@param search_term string
 ---@return string[]
-function M.get_index_fuzzy_matches(search_term, char_search_threshold)
-	local first_n_letters_match = get_first_n_letters_match(char_search_threshold)
-	local lines = get_index_entries_by_match_function(first_n_letters_match, search_term)
-	local matches = {}
-	for _, line in ipairs(lines) do
-		local word = line:match("^(.-)%%")
-		if fzy.has_match(search_term, word) then
-			table.insert(matches, word)
-		end
+function M.get_fuzzy_index_matches_for_word_raw(search_term, char_search_threshold)
+	if #search_term < char_search_threshold then
+		return {}
 	end
-	utils.sort_matches_by_fzy_score(matches, search_term)
-	return matches
+	local first_n_letters_match = get_first_n_letters_match(char_search_threshold)
+	local raw_entries = get_index_entries_by_match_function(first_n_letters_match, search_term)
+	return raw_entries
 end
 
 return M

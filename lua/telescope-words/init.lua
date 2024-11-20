@@ -1,5 +1,4 @@
-local utils = require("telescope-words.utils")
-utils.add_luarocks_packages_to_path()
+require("telescope-words.bootstrap")
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
@@ -26,15 +25,12 @@ local function get_definition_safe(word, pointer_symbols)
 end
 
 ---Get the dictionary entries for a term, catching and logging any errors
----@param search_term string
+---@param user_query string
 ---@param char_search_threshold integer
 ---@return string[]
-local function search_dictionary_safe(search_term, char_search_threshold)
+local function search_dictionary_safe(user_query, char_search_threshold)
 	char_search_threshold = math.max(char_search_threshold, 2)
-	if #search_term < char_search_threshold then
-		return {}
-	end
-	local success, results_or_error = pcall(wordnet.get_index_word_matches, search_term, char_search_threshold)
+	local success, results_or_error = pcall(wordnet.get_fuzzy_word_matches, user_query, char_search_threshold)
 	if success then
 		return results_or_error
 	else
@@ -121,8 +117,8 @@ M.search_dictionary = function(opts)
 			prompt_title = "Dictionary",
 			results_title = "Words",
 			finder = finders.new_dynamic({
-				fn = function(search_term)
-					return search_dictionary_safe(search_term, opts.char_search_threshold)
+				fn = function(user_query)
+					return search_dictionary_safe(user_query, opts.char_search_threshold)
 				end,
 			}),
 			previewer = previewers.new_buffer_previewer({
@@ -181,8 +177,8 @@ M.search_dictionary_for_word_under_cursor = function(opts)
 			prompt_title = "Dictionary",
 			results_title = "Words",
 			finder = finders.new_dynamic({
-				fn = function(search_term)
-					return search_dictionary_safe(search_term, opts.char_search_threshold)
+				fn = function(user_query)
+					return search_dictionary_safe(user_query, opts.char_search_threshold)
 				end,
 			}),
 			previewer = previewers.new_buffer_previewer({

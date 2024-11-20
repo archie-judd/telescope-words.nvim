@@ -8,6 +8,8 @@ local M = {}
 
 ---@alias SynsetTypeNumber 1 | 2 | 3 | 4 | 5
 
+---@alias MatchFunction fun(line: string, search_term: string): boolean
+
 ---@class Word
 ---@field word string
 ---@field lex_id string
