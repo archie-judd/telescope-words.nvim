@@ -1,4 +1,3 @@
-require("telescope-words.utils").add_lua_modules_to_path()
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
