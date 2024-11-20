@@ -231,6 +231,8 @@ M.search_thesaurus_for_word_under_cursor = function(opts)
 		:find()
 end
 
-M.setup = telescope_word_config.setup
+M.setup = function(opts)
+	telescope_word_config.setup(opts)
+end
 
 return M
