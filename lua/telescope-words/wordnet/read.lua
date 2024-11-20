@@ -1,3 +1,4 @@
+local fzy = require("fzy")
 local config = require("telescope-words.wordnet.config")
 local parse = require("telescope-words.wordnet.parse")
 local utils = require("telescope-words.wordnet.utils")
@@ -88,6 +89,15 @@ local function entry_word_matches_exactly(line, search_term)
 	return line:match("^(.-)%%") == search_term
 end
 
+---comment
+---@param n integer
+---@return fun(line: string, search_term: string): boolean
+local function get_first_n_letters_match(n)
+	return function(line, search_term)
+		return string.sub(line, 1, n) == string.sub(search_term, 1, n)
+	end
+end
+
 ---Return true if the word in the entry starts with the search term
 local function entry_starts_with_term(line, search_term)
 	local match_str = search_term:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1") -- escape special characters and replace spaces with underscores
@@ -169,14 +179,17 @@ end
 ---comment
 ---@param search_term string
 ---@return string[]
-function M.get_words_beginning_with_string_in_index(search_term)
-	local lines = get_index_entries_by_match_function(entry_starts_with_term, search_term)
+function M.get_index_fuzzy_matches(search_term, char_search_threshold)
+	local first_n_letters_match = get_first_n_letters_match(char_search_threshold)
+	local lines = get_index_entries_by_match_function(first_n_letters_match, search_term)
 	local matches = {}
 	for _, line in ipairs(lines) do
 		local word = line:match("^(.-)%%")
-		table.insert(matches, word)
+		if fzy.has_match(search_term, word) then
+			table.insert(matches, word)
+		end
 	end
-	table.sort(matches)
+	utils.sort_matches_by_fzy_score(matches, search_term)
 	return matches
 end
 

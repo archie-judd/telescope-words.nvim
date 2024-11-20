@@ -1,3 +1,4 @@
+require("telescope-words.utils").add_lua_modules_to_path()
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
@@ -28,10 +29,11 @@ end
 ---@param char_search_threshold integer
 ---@return string[]
 local function search_dictionary_safe(search_term, char_search_threshold)
-	if #search_term < math.max(char_search_threshold, 2) then
+	char_search_threshold = math.max(char_search_threshold, 2)
+	if #search_term < char_search_threshold then
 		return {}
 	end
-	local success, results_or_error = pcall(wordnet.get_index_word_matches, search_term)
+	local success, results_or_error = pcall(wordnet.get_index_word_matches, search_term, char_search_threshold)
 	if success then
 		return results_or_error
 	else

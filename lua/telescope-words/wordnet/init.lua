@@ -83,11 +83,11 @@ end
 ---Return all the words in the index that starat with the search term
 ---@param search_term string
 ---@return string[]
-function M.get_index_word_matches(search_term)
+function M.get_index_word_matches(search_term, char_search_threshold)
 	local matches = {}
 	search_term = search_term:lower():gsub(" ", "_")
 	-- do not search for strings with fewer chars than char_threshold
-	local matches_raw = read.get_words_beginning_with_string_in_index(search_term)
+	local matches_raw = read.get_index_fuzzy_matches(search_term, char_search_threshold)
 	matches_raw = utils.remove_duplicates(matches_raw)
 	for i, match_raw in ipairs(matches_raw) do
 		matches[i] = utils.prettify_word(match_raw)

@@ -1,3 +1,4 @@
+local fzy = require("fzy")
 local M = {}
 
 ---Get the root directory
@@ -83,6 +84,20 @@ function M.sort_sense_index_entries(entries)
 			return entry1.tag_count > entry2.tag_count -- Descending tag_count if sense_numbers are the same
 		else
 			return entry1.sense_number < entry2.sense_number -- Ascending sense_number if ages are different
+		end
+	end)
+end
+
+---@param matches string[]
+---@param search_term string
+function M.sort_matches_by_fzy_score(matches, search_term)
+	table.sort(matches, function(entry1, entry2)
+		local entry1_score = fzy.score(search_term, entry1)
+		local entry2_score = fzy.score(search_term, entry2)
+		if entry1_score == entry2_score then
+			return entry1 > entry2
+		else
+			return entry1_score >= entry2_score
 		end
 	end)
 end
