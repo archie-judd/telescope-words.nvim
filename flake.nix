@@ -7,6 +7,9 @@
     flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in {
+        devShells.default = pkgs.mkShell {
+          buildInputs = [ pkgs.lua51Packages.lua pkgs.lua51Packages.luarocks ];
+        };
         packages.default = pkgs.vimUtils.buildVimPlugin {
           name = "telescope-words.nvim";
           src = ./.;
