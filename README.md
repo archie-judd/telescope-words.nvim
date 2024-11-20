@@ -159,6 +159,11 @@ See [here](https://wordnet.princeton.edu/documentation/wninput5wn) for more info
 | `<`    | Participle of verb             |
 | `\\`   | Derived from adjective         |
 
+## Acknowledgements
+
+This plugin includes the [fzy-lua](https://github.com/swarn/fzy-lua) library by [swarn](https://github.com/swarn), licensed under the MIT License.
+The license can be found in `luarocks/LICENSE.fzy`. The library is a Lua port of [fzy](https://github.com/jhawthorn/fzy)'s fuzzy string matching algorithm.
+
 ## Related projects
 
 - [telescope-thesaurus](https://github.com/rafi/telescope-thesaurus.nvim)
