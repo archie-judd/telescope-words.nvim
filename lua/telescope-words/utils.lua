@@ -1,5 +1,5 @@
 local M = {}
-function M.add_lua_modules_to_path()
+function M.add_luarocks_packages_to_path()
 	local filepath = debug.getinfo(1, "S").source:match("@(.*)")
 	local plugin_dir = vim.fn.fnamemodify(filepath, ":p:h:h:h")
 	local package_path = plugin_dir

@@ -1,5 +1,5 @@
 local utils = require("telescope-words.utils")
-utils.add_luarocks_to_package_path()
+utils.add_luarocks_packages_to_path()
 local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local finders = require("telescope.finders")
