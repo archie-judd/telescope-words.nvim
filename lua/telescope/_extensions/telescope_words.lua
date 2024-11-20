@@ -3,7 +3,7 @@ local telescope_words = require("telescope-words")
 local telescope_words_config = require("telescope-words.config")
 
 return telescope.register_extension({
-	setup = telescope_words_config.setup,
+	setup = telescope_words_config.setup_as_extension,
 	exports = {
 		search_dictionary = telescope_words.search_dictionary,
 		search_thesaurus = telescope_words.search_thesaurus,
