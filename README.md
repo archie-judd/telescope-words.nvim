@@ -102,9 +102,8 @@ telescope.setup({
                 -- Default is as below ("antonyms", "similar to" and "also see").
                 pointer_symbols = { "!", "&", "^" },
 
-                -- When searching the dictionary, number of characters entered before fuzzy
-                -- searching is used. To avoid returning the whole dictionary there is a lower
-                -- limit of 1. Raise this if results are slow. Default is 3.
+                -- The number of characters entered before fuzzy searching is used. Raise this
+                -- if results are slow. Default is 3.
                 fzy_char_threshold = 3,
 
                 -- Choose the layout strategy. Default is as below.
@@ -124,6 +123,12 @@ telescope.setup({
 One custom action is provided: `replace_word_under_cursor`. You can use it as above.
 
 When invoked it will replace the word under the cursor with the selected entry. Default selection behaviour is to insert the word at the cursor.
+
+### Fuzzy searching
+
+Fuzzy searching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `fzy_char_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
+
+If either the dictionary or thesaurus search functions are slow, raising the value of `fzy_char_threshold` will improve performance.
 
 ### Pointer symbols
 
