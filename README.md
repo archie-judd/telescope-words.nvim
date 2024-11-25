@@ -124,9 +124,9 @@ One custom action is provided: `replace_word_under_cursor`. You can use it as ab
 
 When invoked it will replace the word under the cursor with the selected entry. Default selection behaviour is to insert the word at the cursor.
 
-### Fuzzy searching
+### Fuzzy matching
 
-Fuzzy searching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `fzy_char_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
+Fuzzy matching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `fzy_char_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
 
 If either the dictionary or thesaurus search functions are slow, raising the value of `fzy_char_threshold` will improve performance.
 
