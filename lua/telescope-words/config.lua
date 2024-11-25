@@ -16,7 +16,7 @@ M.config = DEFAULT_CONFIG
 M.setup_as_extension = function(ext_config, global_config)
 	local config = DEFAULT_CONFIG
 	if ext_config.char_search_threshold then
-		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.0")
+		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.1", "telescope-words.nvim")
 		ext_config.fzy_char_threshold = ext_config.char_search_threshold
 	end
 	config.mappings = vim.tbl_deep_extend("force", config.mappings, global_config.mappings or {})
@@ -30,7 +30,7 @@ end
 ---@param config table
 M.setup = function(config)
 	if config.char_search_threshold then
-		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.0")
+		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.1", "telescope-words.nvim")
 		config.fzy_char_threshold = config.char_search_threshold
 	end
 	M.config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, config)

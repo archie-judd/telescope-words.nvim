@@ -64,7 +64,7 @@ end
 ---@return table
 local function merge_opts_with_config(opts, config)
 	if opts.char_search_threshold then
-		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.0")
+		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.1", "telescope-words.nvim")
 		opts.fzy_char_threshold = opts.char_search_threshold
 	end
 	opts.mappings = vim.tbl_deep_extend("force", opts.mappings or {}, config.mappings or {})
