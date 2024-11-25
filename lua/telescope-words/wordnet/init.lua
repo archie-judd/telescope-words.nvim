@@ -38,10 +38,10 @@ local function get_full_synset_for_synset(synset)
 end
 
 ---Get all full synsets for a given word
----@param search_query SearchQuery
+---@param word string
 ---@return FullSynset[]
-local function get_full_synsets_for_word(search_query)
-	local entries = read_index.get_index_entries_for_word(search_query)
+local function get_full_synsets_for_word(word)
+	local entries = read_index.get_index_entries_for_word(word)
 	utils.sort_index_entries_by_sense_number_and_tag_count(entries)
 	local full_synsets = {}
 	for _, entry in ipairs(entries) do
@@ -102,17 +102,29 @@ end
 ---Find the exact word in the index, get the synset, and then find and return all similar words
 ---@param user_query string
 ---@return string[]
-function M.get_similar_words_for_word(user_query)
+function M.get_similar_words_for_word(user_query, fzy_char_threshold)
+	local best_match
 	local similar_words = {}
-	local search_query = types.SearchQuery.new(user_query)
-	local full_synsets = get_full_synsets_for_word(search_query)
+	local search_word = types.SearchQuery.new(user_query)
+	if #user_query < fzy_char_threshold then
+		best_match = read_index.get_first_exact_match_for_word(search_word)
+	else
+		local matches = read_index.get_fuzzy_matches_for_word(search_word, fzy_char_threshold)
+		if #matches > 0 then
+			best_match = matches[1]
+		end
+	end
+	if best_match == nil then
+		return similar_words
+	end
+	local full_synsets = get_full_synsets_for_word(best_match)
 	local similar_words_raw = {}
 	for _, full_synset in ipairs(full_synsets) do
 		local _similar_words_raw = get_similar_words_for_synset(full_synset)
 		similar_words_raw = utils.join_arrays(similar_words_raw, _similar_words_raw)
 	end
 	similar_words_raw = utils.remove_duplicates(similar_words_raw)
-	similar_words_raw = utils.move_to_start_of_array(similar_words_raw, search_query.processed)
+	similar_words_raw = utils.move_to_start_of_array(similar_words_raw, best_match)
 	for i, similar_word_raw in ipairs(similar_words_raw) do
 		similar_words[i] = utils.format_word_for_display(similar_word_raw)
 	end
@@ -126,7 +138,7 @@ end
 ---@return string
 function M.get_definition_for_word(user_query, pointer_symbols)
 	local search_query = types.SearchQuery.new(user_query)
-	local full_synsets = get_full_synsets_for_word(search_query)
+	local full_synsets = get_full_synsets_for_word(search_query.processed)
 	local definition = format.get_definition_string_from_full_synsets(full_synsets, pointer_symbols, search_query.raw)
 	return definition
 end

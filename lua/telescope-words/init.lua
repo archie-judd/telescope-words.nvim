@@ -45,11 +45,11 @@ end
 ---Get the thesaurus entries for a word, catching and logging any errors
 ---@param user_query string
 ---@return string[]
-local function search_thesaurus_safe(user_query)
+local function search_thesaurus_safe(user_query, fzy_char_threshold)
 	if user_query == "" then
 		return {}
 	end
-	local success, results_or_error = pcall(wordnet.get_similar_words_for_word, user_query)
+	local success, results_or_error = pcall(wordnet.get_similar_words_for_word, user_query, fzy_char_threshold)
 	if success then
 		return results_or_error
 	else
@@ -155,7 +155,9 @@ M.search_thesaurus = function(opts)
 			prompt_title = "Thesaurus",
 			results_title = "Similar words",
 			finder = finders.new_dynamic({
-				fn = search_thesaurus_safe,
+				fn = function(user_query)
+					return search_thesaurus_safe(user_query, opts.fzy_char_threshold)
+				end,
 			}),
 			previewer = previewers.new_buffer_previewer({
 				title = "WordNet Definition",
@@ -216,7 +218,9 @@ M.search_thesaurus_for_word_under_cursor = function(opts)
 			prompt_title = "Thesaurus",
 			results_title = "Similar words",
 			finder = finders.new_dynamic({
-				fn = search_thesaurus_safe,
+				fn = function(user_query)
+					return search_thesaurus_safe(user_query, opts.fzy_char_threshold)
+				end,
 			}),
 			previewer = previewers.new_buffer_previewer({
 				title = "WordNet Definition",

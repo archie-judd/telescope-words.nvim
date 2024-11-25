@@ -148,20 +148,20 @@ function M.get_first_exact_match_for_word(search_query)
 end
 
 ---For a given word, read all index entries from all index files
----@param search_query SearchQuery
+---@param word string
 ---@return SenseIndexEntry[]
-function M.get_index_entries_for_word(search_query)
+function M.get_index_entries_for_word(word)
 	local entries = {}
 	local index_file = io.open(config.INDEX_FILEPATH, "r")
 	if not index_file then
 		error("Cannot open file: " .. config.INDEX_FILEPATH)
 	end
-	local match_pos = binary_search_for_match(index_file, line_starts_with_word, search_query.processed)
+	local match_pos = binary_search_for_match(index_file, line_starts_with_word, word)
 	if match_pos == nil then
 		return entries
 	end
-	local first_match_pos = find_first_match_pos(index_file, match_pos, line_starts_with_word, search_query.processed)
-	local last_match_pos = find_last_match_pos(index_file, match_pos, line_starts_with_word, search_query.processed)
+	local first_match_pos = find_first_match_pos(index_file, match_pos, line_starts_with_word, word)
+	local last_match_pos = find_last_match_pos(index_file, match_pos, line_starts_with_word, word)
 	if first_match_pos == nil or last_match_pos == nil then
 		error("Failed to find first or last match position")
 	end
@@ -177,7 +177,7 @@ end
 ---Return the index entries for a given search term, where the search term is a substring of the word in the entry
 ---@param search_query SearchQuery
 ---@param char_threshold integer
----@return SearchQuery[]
+---@return string[]
 function M.get_fuzzy_matches_for_word(search_query, char_threshold)
 	local matches = {}
 	local index_file = io.open(config.INDEX_FILEPATH, "r")
