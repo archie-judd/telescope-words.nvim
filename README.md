@@ -79,36 +79,41 @@ local telescope = require("telescope")
 local word_actions = require("telescope_words.actions")
 
 telescope.setup({
-	defaults = {
-		-- ...
-		extensions = {
-                        -- This configuration only affects this extension.
-			telescope_words = {
-				-- Define custom mappings. Default mappings are {} (empty).
-				mappings = {
-					-- Normal mode.
-					n = {
-						["<CR>"] = word_actions.replace_word_under_cursor,
-					},
-					-- Insert mode.
-					i = {
-						["<CR>"] = word_actions.replace_word_under_cursor,
-					},
-				},
-				-- Default pointers define the lexical relations listed under each definition,
-				-- see Pointer Symbols below. Default is as below ("antonyms", "similar to" and
-				-- "also see").
-				pointer_symbols = { "!", "&", "^" },
-				-- Number of characters required before results are returned To avoid returning
-				-- the whole dictionary there is a lower limit of 2. Default is three.
-				char_search_threshold = 3,
-				-- Choose the layout strategy.
-				layout_strategy = "horizontal",
-				-- And your layout config.
-				layout_config = { height = 0.75, width = 0.75, preview_width = 0.65 },
-			},
-		},
-	},
+    defaults = {
+        -- ...
+        extensions = {
+
+            -- This configuration only affects this extension.
+            telescope_words = {
+
+                -- Define custom mappings. Default mappings are {} (empty).
+                mappings = {
+                    n = {
+                        ["<CR>"] = word_actions.replace_word_under_cursor,
+                    },
+                    i = {
+                        ["<CR>"] = word_actions.replace_word_under_cursor,
+                    },
+
+                },
+
+                -- Default pointers define the lexical relations listed under each definition,
+                -- see Pointer Symbols below.
+                -- Default is as below ("antonyms", "similar to" and "also see").
+                pointer_symbols = { "!", "&", "^" },
+
+                -- The number of characters entered before fuzzy searching is used. Raise this
+                -- if results are slow. Default is 3.
+                fzy_char_threshold = 3,
+
+                -- Choose the layout strategy. Default is as below.
+                layout_strategy = "horizontal",
+
+                -- And your layout config. Default is as below.
+                layout_config = { height = 0.75, width = 0.75, preview_width = 0.65 },
+            },
+        },
+    },
 })
 
 ```
@@ -118,6 +123,12 @@ telescope.setup({
 One custom action is provided: `replace_word_under_cursor`. You can use it as above.
 
 When invoked it will replace the word under the cursor with the selected entry. Default selection behaviour is to insert the word at the cursor.
+
+### Fuzzy matching
+
+Fuzzy matching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `fzy_char_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
+
+If either the dictionary or thesaurus search functions are slow, raising the value of `fzy_char_threshold` will improve performance.
 
 ### Pointer symbols
 
@@ -158,6 +169,11 @@ See [here](https://wordnet.princeton.edu/documentation/wninput5wn) for more info
 | `&`    | Similar to                     |
 | `<`    | Participle of verb             |
 | `\\`   | Derived from adjective         |
+
+## Acknowledgements
+
+This plugin includes the [fzy-lua](https://github.com/swarn/fzy-lua) library by [swarn](https://github.com/swarn), licensed under the MIT License.
+The license can be found in `luarocks/LICENSE.fzy`. The library is a Lua port of [fzy](https://github.com/jhawthorn/fzy)'s fuzzy string matching algorithm.
 
 ## Related projects
 

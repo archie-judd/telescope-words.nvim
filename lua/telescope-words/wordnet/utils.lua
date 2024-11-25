@@ -1,3 +1,5 @@
+local fzy = require("fzy")
+
 local M = {}
 
 ---Get the root directory
@@ -22,11 +24,11 @@ function M.join_arrays(t1, t2)
 	return result
 end
 
----Take a lemma (index representation of a word)
+---Take a lemma (index representation of a word) and format it for display
 ---@param word_raw string
 ---@return string
-function M.prettify_word(word_raw)
-	return word_raw:gsub("%(.%)", ""):gsub("_", " ")
+function M.format_word_for_display(word_raw)
+	return word_raw:gsub("%b()", ""):gsub("_", " ")
 end
 
 ---Check if a given value is in a table (which is an array)
@@ -77,12 +79,26 @@ end
 
 ---Sort sense index entries by sense integer (increasing), and tag count (decreasing). Sense number has priority.
 ---@param entries SenseIndexEntry
-function M.sort_sense_index_entries(entries)
+function M.sort_index_entries_by_sense_number_and_tag_count(entries)
 	table.sort(entries, function(entry1, entry2)
 		if entry1.sense_number == entry2.sense_number then
 			return entry1.tag_count > entry2.tag_count -- Descending tag_count if sense_numbers are the same
 		else
-			return entry1.sense_number < entry2.sense_number -- Ascending sense_number if ages are different
+			return entry1.sense_number < entry2.sense_number -- Ascending sense_number if sense_numbers are different
+		end
+	end)
+end
+
+---@param matches string[]
+---@param search_term string
+function M.sort_word_matches_by_fzy_score(matches, search_term)
+	table.sort(matches, function(entry1, entry2)
+		local entry1_score = fzy.score(search_term, entry1)
+		local entry2_score = fzy.score(search_term, entry2)
+		if entry1_score == entry2_score then
+			return entry1 > entry2
+		else
+			return entry1_score >= entry2_score
 		end
 	end)
 end

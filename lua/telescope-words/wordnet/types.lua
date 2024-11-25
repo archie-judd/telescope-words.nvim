@@ -8,6 +8,22 @@ local M = {}
 
 ---@alias SynsetTypeNumber 1 | 2 | 3 | 4 | 5
 
+---@class SearchQuery
+---@field raw string
+---@field processed string
+local SearchQuery = {}
+SearchQuery.__index = SearchQuery
+
+function SearchQuery.new(raw)
+	local self = setmetatable({}, SearchQuery)
+	if type(raw) ~= "string" then
+		error("Failed to instantiate SearchQuery")
+	end
+	self.raw = raw
+	self.processed = raw:lower():gsub(" ", "_")
+	return self
+end
+
 ---@class Word
 ---@field word string
 ---@field lex_id string
@@ -224,6 +240,7 @@ function SenseKey.new(lemma, ss_type, lex_filenum, lex_id, head_word, head_id)
 	return self
 end
 
+M.SearchQuery = SearchQuery
 M.Word = Word
 M.Pointer = Pointer
 M.Synset = Synset

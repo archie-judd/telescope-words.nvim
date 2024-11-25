@@ -1,4 +1,6 @@
+local utils = require("telescope-words.wordnet.utils")
 local types = require("telescope-words.wordnet.types")
+
 local M = {}
 
 ---Parse parse the lex_id parts of a given synset entry
@@ -77,9 +79,9 @@ local function parse_sense_key(sense_key_str)
 end
 
 ---Parse a synset entry
----@param synset_entry_str string
+---@param synset_entry_line string
 ---@return Synset
-function M.parse_synset_entry(synset_entry_str)
+function M.parse_synset_entry(synset_entry_line)
 	---@type string[]
 	local word_parts = {}
 	---@type string[]
@@ -93,9 +95,9 @@ function M.parse_synset_entry(synset_entry_str)
 	local ss_type = nil
 	local w_cnt = nil
 	local p_cnt = nil
-	local gloss = synset_entry_str:match("| (.+)")
+	local gloss = synset_entry_line:match("| (.+)")
 
-	for part in string.gmatch(synset_entry_str, "%S+") do
+	for part in string.gmatch(synset_entry_line, "%S+") do
 		if i == 0 then
 			synset_offset = tonumber(part)
 		elseif i == 1 then
@@ -123,17 +125,25 @@ function M.parse_synset_entry(synset_entry_str)
 	return synset
 end
 
+---Takes a sense index and line and returns the word for display
+---@param line any
+---@return string
+function M.parse_display_word_from_sense_index_line(line)
+	local word_raw = line:match("^(.-)%%")
+	return utils.format_word_for_display(word_raw)
+end
+
 ---Parse a sense index entry
----@param entry_str string
+---@param line string
 ---@return SenseIndexEntry
-function M.parse_sense_index_entry(entry_str)
+function M.parse_sense_index_line(line)
 	local sense_key = nil
 	local synset_offset = nil
 	local sense_number = nil
 	local tag_count = nil
 
 	local i = 0
-	for part in string.gmatch(entry_str, "%S+") do
+	for part in string.gmatch(line, "%S+") do
 		if i == 0 then
 			sense_key = parse_sense_key(part)
 		elseif i == 1 then
