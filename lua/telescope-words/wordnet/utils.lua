@@ -1,4 +1,5 @@
 local fzy = require("fzy")
+
 local M = {}
 
 ---Get the root directory

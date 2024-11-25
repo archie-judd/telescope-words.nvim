@@ -79,36 +79,42 @@ local telescope = require("telescope")
 local word_actions = require("telescope_words.actions")
 
 telescope.setup({
-	defaults = {
-		-- ...
-		extensions = {
-                        -- This configuration only affects this extension.
-			telescope_words = {
-				-- Define custom mappings. Default mappings are {} (empty).
-				mappings = {
-					-- Normal mode.
-					n = {
-						["<CR>"] = word_actions.replace_word_under_cursor,
-					},
-					-- Insert mode.
-					i = {
-						["<CR>"] = word_actions.replace_word_under_cursor,
-					},
-				},
-				-- Default pointers define the lexical relations listed under each definition,
-				-- see Pointer Symbols below. Default is as below ("antonyms", "similar to" and
-				-- "also see").
-				pointer_symbols = { "!", "&", "^" },
-				-- Number of characters required before results are returned To avoid returning
-				-- the whole dictionary there is a lower limit of 2. Default is three.
-				char_search_threshold = 3,
-				-- Choose the layout strategy.
-				layout_strategy = "horizontal",
-				-- And your layout config.
-				layout_config = { height = 0.75, width = 0.75, preview_width = 0.65 },
-			},
-		},
-	},
+    defaults = {
+        -- ...
+        extensions = {
+
+            -- This configuration only affects this extension.
+            telescope_words = {
+
+                -- Define custom mappings. Default mappings are {} (empty).
+                mappings = {
+                    n = {
+                        ["<CR>"] = word_actions.replace_word_under_cursor,
+                    },
+                    i = {
+                        ["<CR>"] = word_actions.replace_word_under_cursor,
+                    },
+
+                },
+
+                -- Default pointers define the lexical relations listed under each definition,
+                -- see Pointer Symbols below.
+                -- Default is as below ("antonyms", "similar to" and "also see").
+                pointer_symbols = { "!", "&", "^" },
+
+                -- When searching the dictionary, number of characters entered before fuzzy
+                -- searching is used. To avoid returning the whole dictionary there is a lower
+                -- limit of 1. Raise this if results are slow. Default is 3.
+                fzy_char_threshold = 3,
+
+                -- Choose the layout strategy. Default is as below.
+                layout_strategy = "horizontal",
+
+                -- And your layout config. Default is as below.
+                layout_config = { height = 0.75, width = 0.75, preview_width = 0.65 },
+            },
+        },
+    },
 })
 
 ```

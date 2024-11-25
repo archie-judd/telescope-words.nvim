@@ -86,10 +86,9 @@ end
 ---Get the full definition string for a given synset
 ---@param full_synsets FullSynset[]
 ---@param pointer_symbols PointerSymbol[]
----@param lemma string
-function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols, lemma)
+---@param user_query string
+function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols, user_query)
 	local definition = ""
-	local lemma_str = utils.format_word_for_display(lemma)
 	for i, full_synset in ipairs(full_synsets) do
 		local words = {}
 		for _, word in ipairs(full_synset.words) do
@@ -109,7 +108,11 @@ function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols
 			definition = definition .. "\n"
 		end
 	end
-	definition = definition:gsub(lemma_str, "*" .. lemma_str .. "*")
+	-- Make lower and upper replacements, in case the user query is an ACRONYM
+	definition =
+		definition:gsub("(%A)" .. user_query:lower() .. "(%A)", "%1" .. "*" .. user_query:lower() .. "*" .. "%2")
+	definition =
+		definition:gsub("(%A)" .. user_query:upper() .. "(%A)", "%1" .. "*" .. user_query:upper() .. "*" .. "%2")
 	return definition
 end
 
