@@ -56,22 +56,24 @@ function M.remove_duplicates(array)
 	return unique
 end
 
----Search for a value in an array. If present move to the start.
----@param array any[]
----@param value any
+---Search for a word in an array. If present move to the start.
+---@param array string[]
+---@param word string
 ---@return any[]
-function M.move_to_start_of_array(array, value)
+function M.move_word_to_start_of_array(array, word)
 	-- Find the index of the value in the array
 	local index = nil
+	local match = nil
 	for i, v in ipairs(array) do
-		if v == value then
+		if v:lower() == word:lower() then
 			index = i
+			match = v
 			break
 		end
 	end
 	if index then
 		table.remove(array, index)
-		table.insert(array, 1, value)
+		table.insert(array, 1, match)
 	end
 
 	return array

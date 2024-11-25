@@ -124,7 +124,7 @@ function M.get_similar_words_for_word(user_query, fzy_char_threshold)
 		similar_words_raw = utils.join_arrays(similar_words_raw, _similar_words_raw)
 	end
 	similar_words_raw = utils.remove_duplicates(similar_words_raw)
-	similar_words_raw = utils.move_to_start_of_array(similar_words_raw, best_match)
+	similar_words_raw = utils.move_word_to_start_of_array(similar_words_raw, best_match)
 	for i, similar_word_raw in ipairs(similar_words_raw) do
 		similar_words[i] = utils.format_word_for_display(similar_word_raw)
 	end
