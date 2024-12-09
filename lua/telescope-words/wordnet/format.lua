@@ -76,10 +76,9 @@ local function get_pointer_string(full_synset, pointer_symbols)
 		if utils.array_contains(pointer_symbols, pointer_symbol) then
 			local pointer_type_str = POINTER_SYMBOL_TO_DESC[pointer_symbol]:lower()
 			local word_str = table.concat(words, ", ")
-			pts_str = string.format("%s`%s`: %s\n", pts_str, pointer_type_str, word_str)
+			pts_str = string.format("%s\n`%s`: %s", pts_str, pointer_type_str, word_str)
 		end
 	end
-	pts_str = pts_str .. "\n\n"
 	return pts_str
 end
 
@@ -100,13 +99,12 @@ function M.get_definition_string_from_full_synsets(full_synsets, pointer_symbols
 		local pts_string = get_pointer_string(full_synset, pointer_symbols)
 
 		definition =
-			string.format("%s%s.[[%s]] %s:\n\n%s\n\n", definition, i, syntactic_category, word_str, full_synset.gloss)
+			string.format("%s%s.[[%s]] %s:\n\n%s", definition, i, syntactic_category, word_str, full_synset.gloss)
 
 		if pts_string ~= "" then
-			definition = definition .. pts_string
-		else
-			definition = definition .. "\n"
+			definition = definition .. "\n" .. pts_string
 		end
+		definition = definition .. "\n___\n\n"
 	end
 	-- Make lower and upper replacements, in case the user query is an ACRONYM
 	definition =
