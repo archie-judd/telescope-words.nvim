@@ -23,19 +23,19 @@ It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical
 Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
-{
-  'nvim-telescope/telescope.nvim',
-  dependencies = { 'archie-judd/telescope-words.nvim' },
-},
+use {
+  'archie-judd/telescope-words.nvim',
+  requires = { 'nvim-telescope/telescope.nvim' }
+}
 ```
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 
 ```lua
-use {
-  'archie-judd/telescope-words.nvim',
-  requires = { 'nvim-telescope/telescope.nvim' }
-}
+{
+  'nvim-telescope/telescope.nvim',
+  dependencies = { 'archie-judd/telescope-words.nvim' }
+},
 ```
 
 ## Usage
