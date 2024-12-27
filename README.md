@@ -35,7 +35,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim)
 {
   'nvim-telescope/telescope.nvim',
   dependencies = { 'archie-judd/telescope-words.nvim' }
-},
+}
 ```
 
 ## Usage
