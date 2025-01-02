@@ -8,7 +8,8 @@ Fuzzy find words and synonyms using Telescope.
 
 It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
-[video](https://github.com/user-attachments/assets/b14fe3ba-a910-4acf-9e74-7b316ee28fe5)
+
+[video](https://github.com/user-attachments/assets/e6b0c134-ec22-4bcf-b466-68eafb751de7)
 
 ## Getting Started
 
@@ -134,7 +135,8 @@ If either the dictionary or thesaurus search functions are slow, raising the val
 
 A WordNet definition looks like this:
 
-<img width="1512" alt="Screenshot 2024-11-15 at 02 17 21" src="https://github.com/user-attachments/assets/8f1d555d-39a4-4b91-aa1d-be9ebdc07b53">
+<img width="1131" alt="Screenshot 2025-01-02 at 10 24 06" src="https://github.com/user-attachments/assets/24974be4-caf3-4b44-bda8-2ef08077b063" />
+
 
 Beneath each definition are _pointers_. A _pointer_ is a lexical relation between words, for example _antonyms_. You can
 define which pointers are shown by providing a list of pointer symbols.
