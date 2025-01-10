@@ -77,7 +77,7 @@ You can customise the extension in telescope's setup function:
 
 ```lua
 local telescope = require("telescope")
-local word_actions = require("telescope_words.actions")
+local word_actions = require("telescope-words.actions")
 
 telescope.setup({
     defaults = {
