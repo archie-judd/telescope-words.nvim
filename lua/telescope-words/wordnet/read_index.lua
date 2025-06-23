@@ -1,4 +1,4 @@
-local fzy = require("fzy")
+local fzy = require("telescope-words.wordnet.fzy")
 local config = require("telescope-words.wordnet.config")
 local parse = require("telescope-words.wordnet.parse")
 local utils = require("telescope-words.wordnet.utils")
