@@ -8,8 +8,6 @@ Fuzzy find words and synonyms using Telescope.
 
 It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
-See also [blink-cmp-words](https://github.com/archie-judd/blink-cmp-word) for a completion source.
-
 [video](https://github.com/user-attachments/assets/e6b0c134-ec22-4bcf-b466-68eafb751de7)
 
 ## Getting Started
@@ -182,3 +180,4 @@ The license can be found in `luarocks/LICENSE.fzy`. The library is a Lua port of
 
 - [telescope-thesaurus](https://github.com/rafi/telescope-thesaurus.nvim)
 - [thesaurus_query.vim](https://github.com/Ron89/thesaurus_query.vim)
+- [blink-cmp-words](https://github.com/archie-judd/blink-cmp-words)
