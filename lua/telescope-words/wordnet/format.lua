@@ -51,7 +51,7 @@ local function build_pointer_string_table(full_pts, pointer_symbols)
 		if utils.array_contains(pointer_symbols, full_ptr.pointer_symbol) then
 			local words_pretty = {}
 			for _, word in ipairs(full_ptr.synset.words) do
-				local word_pretty = utils.format_word_for_display(word.word)
+				local word_pretty = M.format_word_for_display(word.word)
 				table.insert(words_pretty, word_pretty)
 			end
 
@@ -80,6 +80,13 @@ local function get_pointer_string(full_synset, pointer_symbols)
 		end
 	end
 	return pts_str
+end
+
+---Take a lemma (index representation of a word) and format it for display
+---@param word_raw string
+---@return string
+function M.format_word_for_display(word_raw)
+	return word_raw:gsub("%b()", ""):gsub("_", " ")
 end
 
 ---Get the full definition string for a given synset

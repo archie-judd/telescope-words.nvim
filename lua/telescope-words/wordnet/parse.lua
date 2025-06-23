@@ -1,4 +1,4 @@
-local utils = require("telescope-words.wordnet.utils")
+local format = require("telescope-words.wordnet.format")
 local types = require("telescope-words.wordnet.types")
 
 local M = {}
@@ -130,7 +130,7 @@ end
 ---@return string
 function M.parse_display_word_from_sense_index_line(line)
 	local word_raw = line:match("^(.-)%%")
-	return utils.format_word_for_display(word_raw)
+	return format.format_word_for_display(word_raw)
 end
 
 ---Parse a sense index entry

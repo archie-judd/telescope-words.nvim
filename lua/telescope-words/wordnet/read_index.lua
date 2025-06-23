@@ -174,6 +174,23 @@ function M.get_index_entries_for_word(word)
 	return entries
 end
 
+---@param matches string[]
+---@param search_term string
+local function sort_word_matches_by_fzy_score(matches, search_term)
+	table.sort(matches, function(entry1, entry2)
+		local entry1_score = fzy.score(search_term, entry1)
+		local entry2_score = fzy.score(search_term, entry2)
+		if entry1_score == entry2_score then
+			if #entry1 ~= #entry2 then
+				return #entry1 < #entry2
+			end
+			return entry1 < entry2
+		else
+			return entry1_score >= entry2_score
+		end
+	end)
+end
+
 ---Return the index entries for a given search term, where the search term is a substring of the word in the entry
 ---@param search_query SearchQuery
 ---@param char_threshold integer
@@ -203,7 +220,7 @@ function M.get_fuzzy_matches_for_word(search_query, char_threshold)
 			table.insert(matches, display_word)
 		end
 	end
-	utils.sort_word_matches_by_fzy_score(matches, search_query.raw)
+	sort_word_matches_by_fzy_score(matches, search_query.raw)
 	return matches
 end
 

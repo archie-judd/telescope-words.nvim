@@ -6,6 +6,41 @@ local utils = require("telescope-words.wordnet.utils")
 
 local M = {}
 
+---Search for a word in an array. If present move to the start.
+---@param array string[]
+---@param word string
+---@return any[]
+local function move_word_to_start_of_array(array, word)
+	-- Find the index of the value in the array
+	local index = nil
+	local match = nil
+	for i, v in ipairs(array) do
+		if v:lower() == word:lower() then
+			index = i
+			match = v
+			break
+		end
+	end
+	if index then
+		table.remove(array, index)
+		table.insert(array, 1, match)
+	end
+
+	return array
+end
+
+---Sort sense index entries by sense integer (increasing), and tag count (decreasing). Sense number has priority.
+---@param entries SenseIndexEntry
+local function sort_index_entries_by_sense_number_and_tag_count(entries)
+	table.sort(entries, function(entry1, entry2)
+		if entry1.sense_number == entry2.sense_number then
+			return entry1.tag_count > entry2.tag_count -- Descending tag_count if sense_numbers are the same
+		else
+			return entry1.sense_number < entry2.sense_number -- Ascending sense_number if sense_numbers are different
+		end
+	end)
+end
+
 ---Parse a synset entry and include synset information with each pointer
 ---@param synset Synset
 ---@return FullSynset
@@ -42,7 +77,7 @@ end
 ---@return FullSynset[]
 local function get_full_synsets_for_word(word)
 	local entries = read_index.get_index_entries_for_word(word)
-	utils.sort_index_entries_by_sense_number_and_tag_count(entries)
+	sort_index_entries_by_sense_number_and_tag_count(entries)
 	local full_synsets = {}
 	for _, entry in ipairs(entries) do
 		local data_filepath = read_data.get_data_filepath_for_synset_type(entry.ss_type)
@@ -124,9 +159,9 @@ function M.get_similar_words_for_word(user_query, fzy_char_threshold)
 		similar_words_raw = utils.join_arrays(similar_words_raw, _similar_words_raw)
 	end
 	similar_words_raw = utils.remove_duplicates(similar_words_raw)
-	similar_words_raw = utils.move_word_to_start_of_array(similar_words_raw, best_match)
+	similar_words_raw = move_word_to_start_of_array(similar_words_raw, best_match)
 	for i, similar_word_raw in ipairs(similar_words_raw) do
-		similar_words[i] = utils.format_word_for_display(similar_word_raw)
+		similar_words[i] = format.format_word_for_display(similar_word_raw)
 	end
 	return similar_words
 end
