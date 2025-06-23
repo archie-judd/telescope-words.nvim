@@ -8,6 +8,7 @@ Fuzzy find words and synonyms using Telescope.
 
 It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
+See also [blink-cmp-words](https://github.com/archie-judd/blink-cmp-word) for a completion source.
 
 [video](https://github.com/user-attachments/assets/e6b0c134-ec22-4bcf-b466-68eafb751de7)
 
