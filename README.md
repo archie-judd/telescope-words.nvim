@@ -1,10 +1,10 @@
 # Telescope Words
 
-Fuzzy find words and synonyms using Telescope.
+Fuzzy find words and their definitions (dictionary) or synonyms (thesaurus) using Telescope.
 
 ## What is Telescope Words?
 
-`telescope-words.nvim` is an extension for `telescope.nvim` that enables fast offline fuzzy-finding of words, and synonyms.
+`telescope-words.nvim` is an extension for `telescope.nvim` that enables fast offline fuzzy-finding of words and their definitions (dictionary mode) or synonyms and related words (thesaurus mode).
 
 It uses Princeton University's [WordNet](https://wordnet.princeton.edu/) lexical database to provide definitions and lexical relations.
 
