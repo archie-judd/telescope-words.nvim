@@ -34,7 +34,7 @@ M.setup_as_extension = function(ext_config, global_config)
 		ext_config.dictionary_search_threshold,
 		{ "number" }
 	)
-	vim.validate("telescope-words.ext_config.defintion_pointers", ext_config.definition_pointers, { "table" })
+	vim.validate("telescope-words.ext_config.definition_pointers", ext_config.definition_pointers, { "table" })
 	vim.validate("telescope-words.ext_config.similarity_pointers", ext_config.similarity_pointers, { "table" })
 	vim.validate("telescope-words.ext_config.similarity_depth", ext_config.similarity_depth, { "number" })
 	vim.validate("telescope-words.ext_config.layout_strategy", ext_config.layout_strategy, { "string" })
