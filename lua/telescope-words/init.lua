@@ -75,7 +75,6 @@ local function merge_opts_with_config(opts, config)
 	opts.similarity_pointers = opts.similarity_pointers or config.similarity_pointers
 	opts.similarity_depth = opts.similarity_depth or config.similarity_depth
 	opts.definition_pointers = opts.definition_pointers or config.definition_pointers
-	opts.similarity_depth = opts.similarity_depth or config.similarity_depth
 	return opts
 end
 
