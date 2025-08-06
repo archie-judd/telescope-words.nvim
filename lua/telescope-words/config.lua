@@ -1,39 +1,57 @@
 local M = {}
 
+--- @class TelescopeWordsConfig
+--- @field definition_pointers string[] Symbols used to indicate pointers in the preview
+--- @field pointer_symbols? string[] @deprecated Use definition_pointers instead
+--- @field fzy_char_threshold integer | nil @deprecated Use dictionary_search_threshold instead
+--- @field dictionary_search_threshold integer Minimum length of a word to search in the dictionary
+--- @field similarity_pointers string[] Pointers to consider for similarity in thesaurus
+--- @field similarity_depth integer Depth of similarity search in thesaurus
+--- @field mappings table Key mappings for the telescope words plugin
+--- @field layout_config table Layout configuration for the telescope words plugin
+--- @field layout_strategy string Layout strategy for the telescope words plugin
 local DEFAULT_CONFIG = {
-	mappings = {},
-	layout_config = { width = 0.75, height = 0.75, preview_width = 0.65 },
+	pointer_symbols = nil,
+	fzy_char_threshold = nil,
+	definition_pointers = { "!", "&", "^" },
+	dictionary_search_threshold = 3,
+	similarity_pointers = { "&", "^" },
+	similarity_depth = 2,
 	layout_strategy = "horizontal",
-	pointer_symbols = { "!", "&", "^" },
-	fzy_char_threshold = 3,
+	layout_config = {},
+	mappings = {},
 }
 
 M.config = DEFAULT_CONFIG
 
 ---Build a config table for the telescope words plugin -- inherit the global config mappings
----@param ext_config any
+---@param ext_config TelescopeWordsConfig
 ---@param global_config any
 M.setup_as_extension = function(ext_config, global_config)
-	local config = DEFAULT_CONFIG
-	if ext_config.char_search_threshold then
-		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.1", "telescope-words.nvim")
-		ext_config.fzy_char_threshold = ext_config.char_search_threshold
+	ext_config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, ext_config or {})
+	vim.validate(
+		"telescope-words.ext_config.dictionary_search_threshold",
+		ext_config.dictionary_search_threshold,
+		{ "number" }
+	)
+	vim.validate("telescope-words.ext_config.definition_pointers", ext_config.definition_pointers, { "table" })
+	vim.validate("telescope-words.ext_config.similarity_pointers", ext_config.similarity_pointers, { "table" })
+	vim.validate("telescope-words.ext_config.similarity_depth", ext_config.similarity_depth, { "number" })
+	vim.validate("telescope-words.ext_config.layout_strategy", ext_config.layout_strategy, { "string" })
+	vim.validate("telescope-words.ext_config.layout_config", ext_config.layout_config, { "table" })
+	if ext_config.fzy_char_threshold then
+		vim.deprecate("fzy_char_threshold", "dictionary_search_threshold", "2.1.0", "telescope-words")
 	end
-	config.mappings = vim.tbl_deep_extend("force", config.mappings, global_config.mappings or {})
-	config.layout_config = vim.tbl_deep_extend("force", config.layout_config, global_config.layout_config or {})
-	config.layout_strategy = global_config.layout_strategy or config.layout_strategy
-	config = vim.tbl_deep_extend("force", config, ext_config)
-	M.config = config
-end
+	ext_config.dictionary_search_threshold = ext_config.dictionary_search_threshold or ext_config.fzy_char_threshold
+	if ext_config.pointer_symbols then
+		vim.deprecate("pointer_symbols", "definition_pointers", "2.1.0", "telescope-words")
+		ext_config.definition_pointers = ext_config.definition_pointers or ext_config.pointer_symbols
+	end
 
----Build a config table for the telescope words plugin
----@param config table
-M.setup = function(config)
-	if config.char_search_threshold then
-		vim.deprecate("char_search_threshold", "fzy_char_threshold", "1.1.1", "telescope-words.nvim")
-		config.fzy_char_threshold = config.char_search_threshold
-	end
-	M.config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, config)
+	ext_config.mappings = vim.tbl_deep_extend("force", ext_config.mappings, global_config.mappings or {})
+	ext_config.layout_config = vim.tbl_deep_extend("force", ext_config.layout_config, global_config.layout_config or {})
+	ext_config.layout_strategy = ext_config.layout_strategy or global_config.layout_strategy
+	M.config = vim.tbl_deep_extend("force", global_config, ext_config)
 end
 
 return M

@@ -13,7 +13,7 @@
         packages.default = pkgs.vimUtils.buildVimPlugin {
           name = "telescope-words.nvim";
           src = ./.;
-          dependencies = with pkgs.vimPlugins; [ telescope-nvim plenary-nvim ];
+          nvimSkipModules = [ "telescope-words" "telescope-words.actions" ];
         };
 
       });
