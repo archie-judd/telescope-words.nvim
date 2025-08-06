@@ -100,11 +100,20 @@ telescope.setup({
                 -- Default pointers define the lexical relations listed under each definition,
                 -- see Pointer Symbols below.
                 -- Default is as below ("antonyms", "similar to" and "also see").
-                pointer_symbols = { "!", "&", "^" },
+                definition_pointers = { "!", "&", "^" },
 
                 -- The number of characters entered before fuzzy searching is used. Raise this
                 -- if results are slow. Default is 3.
-                fzy_char_threshold = 3,
+                dictionary_search_threshold = 3,
+
+                -- The pointers that are considered similar words when using the thesaurus,
+                -- see Pointer Symbols below.
+                -- Default is as below ("similar to", "also see" }
+                similarity_pointers = { "&", "^", "+"},
+
+                -- The depth of similar words to recurse when collecting synonyms. 1 is similar words, 
+                -- 2 is similar words of similar words, etc. Increasing this may slow results. 
+                similarity_depth = 2,
 
                 -- Choose the layout strategy. Default is as below.
                 layout_strategy = "horizontal",
@@ -126,9 +135,9 @@ When invoked it will replace the word under the cursor with the selected entry. 
 
 ### Fuzzy matching
 
-Fuzzy matching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `fzy_char_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
+Fuzzy matching is used to provide good results in the case of miss-spelt user queries. The character threshold at which fuzzy-searching kicks in can be set using the option `dictionary_search_threshold`, as above. For queries with fewer characters than this value, only exact matches are returned.
 
-If either the dictionary or thesaurus search functions are slow, raising the value of `fzy_char_threshold` will improve performance.
+If either the dictionary or thesaurus search functions are slow, raising the value of `dictionary_search_threshold` will improve performance.
 
 ### Pointer symbols
 
